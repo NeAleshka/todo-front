@@ -5,7 +5,6 @@ export const checkAuth = async (): Promise<{
     const response = await fetch('http://localhost:3000/auth/me', {
       credentials: 'include',
     });
-    console.log(response);
     if (response.ok) {
       return { isAuthenticated: true };
     }
@@ -13,4 +12,21 @@ export const checkAuth = async (): Promise<{
   } catch {
     return { isAuthenticated: false };
   }
+};
+
+export const authWithLogin = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
+  return await fetch('http://localhost:3000/auth/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+    credentials: 'include',
+  }).then((res) => res.status);
 };

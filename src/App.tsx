@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { type Task, taskService } from './services/taskService';
 import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
@@ -37,7 +37,6 @@ const App = () => {
       console.error(err);
     }
   };
-
   const deleteTask = async (id: string) => {
     try {
       await taskService.delete(id);
