@@ -1,10 +1,8 @@
-const API_URL = import.meta.env.VITE_API_URL;
-
 export const checkAuth = async (): Promise<{
   isAuthenticated: boolean;
 }> => {
   try {
-    const response = await fetch(`${API_URL}/auth/me`, {
+    const response = await fetch('http://localhost:3000/auth/me', {
       credentials: 'include',
     });
     if (response.ok) {
@@ -23,7 +21,7 @@ export const authWithLogin = async ({
   email: string;
   password: string;
 }) => {
-  return await fetch(`${API_URL}/auth/signIn`, {
+  return await fetch('http://localhost:3000/auth/signIn', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -40,7 +38,7 @@ export const signUp = async ({
   email: string;
   password: string;
 }) => {
-  return await fetch(`${API_URL}/auth/signUp`, {
+  return await fetch('http://localhost:3000/auth/signUp', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
