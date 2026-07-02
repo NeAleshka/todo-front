@@ -1,6 +1,6 @@
 import { createLazyRoute, useNavigate } from '@tanstack/react-router';
 import { type SyntheticEvent, useState } from 'react';
-import { authWithLogin } from '../services/authService.ts';
+import { authWithLogin, signUp } from '../services/authService.ts';
 
 export const Route = createLazyRoute('/login')({
   component: LoginPage,
@@ -13,10 +13,12 @@ function LoginPage() {
   const [data, setData] = useState<{
     email?: string;
     password?: string;
+    name?: string;
   } | null>(null);
-
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [tab, setTab] = useState<'Login' | 'SignUp' | null>(null);
+
   const sendAuthData = (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     authWithLogin({
@@ -27,22 +29,69 @@ function LoginPage() {
     });
   };
 
+  const handleSingUp = () => {
+    signUp({ email: data?.email ?? '', password: data?.password ?? '' }).then(
+      (res) => {
+        res === 200
+          ? navigate({ to: '/tasks' })
+          : setError('Ошибка регистрации');
+      },
+    );
+  };
+
   return (
     <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
       <h1>Вход</h1>
-      <form onSubmit={sendAuthData}>
+      <div>
         <input
-          placeholder={'Email address'}
-          value={data?.email ?? ''}
-          onChange={(e) => setData({ ...data, email: e.target.value })}
+          type={'checkbox'}
+          onChange={() => setTab('Login')}
+          checked={tab === 'Login'}
         />
+        Войти
+      </div>
+      <div>
         <input
-          placeholder={'Password'}
-          value={data?.password ?? ''}
-          onChange={(e) => setData({ ...data, password: e.target.value })}
+          type={'checkbox'}
+          onChange={() => setTab('SignUp')}
+          checked={tab === 'SignUp'}
         />
-        <button type="submit">Войти</button>
-      </form>
+        Регистрация
+      </div>
+
+      {tab && (
+        <form onSubmit={sendAuthData}>
+          <input
+            placeholder={'Email address'}
+            value={data?.email ?? ''}
+            onChange={(e) => setData({ ...data, email: e.target.value })}
+          />
+          <input
+            placeholder={'Password'}
+            value={data?.password ?? ''}
+            onChange={(e) => setData({ ...data, password: e.target.value })}
+          />
+          {tab === 'SignUp' && (
+            <input
+              placeholder={'Name'}
+              value={data?.name ?? ''}
+              onChange={(e) => setData({ ...data, name: e.target.value })}
+            />
+          )}
+          <div>
+            {tab && (
+              <div>
+                {tab === 'Login' ? (
+                  <button type="submit">Войти</button>
+                ) : (
+                  <button onClick={handleSingUp}>Регистрация</button>
+                )}
+              </div>
+            )}
+          </div>
+        </form>
+      )}
+
       {error && <div style={{ color: 'red' }}>{error}</div>}
       <button
         onClick={handleGoogleLogin}

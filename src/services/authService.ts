@@ -21,7 +21,24 @@ export const authWithLogin = async ({
   email: string;
   password: string;
 }) => {
-  return await fetch('http://localhost:3000/auth/login', {
+  return await fetch('http://localhost:3000/auth/signIn', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+    credentials: 'include',
+  }).then((res) => res.status);
+};
+
+export const signUp = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
+  return await fetch('http://localhost:3000/auth/signUp', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
